@@ -77,16 +77,14 @@ Matrix Matrix::operator - (const Matrix &obj) const
 Matrix Matrix::operator * (const Matrix &obj) const
 {
     Matrix tmp(row,obj.column);
-    for(int i=0;i<row;i++)
-        for(int j=0;j<obj.column;j++)
-        {
-            tmp.data[i][j]=0;
+    for(int i = 0; i < tmp.row; ++i)//矩阵相乘
+    {
+        for (int j = 0; j < tmp.column; ++j) {
+            tmp.data[i][j] = 0;
+            for (int k = 0; k < column; ++k)
+                tmp.data[i][j] += data[i][k] * obj.data[k][j];
         }
-    for(int i=0;i<row;i++)
-        for(int j=0;j<obj.column;j++)
-        {
-            tmp.data[i][j]+=data[i][j]*obj.data[j][i];
-        }
+    }
     return tmp;
 }
 Matrix & Matrix::operator = (const Matrix &obj)
@@ -102,27 +100,37 @@ Matrix & Matrix::operator = (const Matrix &obj)
 Matrix Matrix::operator ! () const
 {
     Matrix tmp(column,row);
-    for(int i=0;i<row;i++)
-        for(int j=0;j<column;j++)
-            tmp.data[j][i]=data[i][j];
+    for(int i=0;i<column;i++)
+        for(int j=0;j<row;j++)
+            tmp.data[i][j]=data[j][i];
     return tmp;
 }
 Matrix Matrix::operator [] (unsigned i) const
 {
     Matrix tmp(1,column);
     for(int j=0;j<column;j++)
-        tmp.data[1][j]=data[i][j];
+        tmp.data[0][j]=data[i][j];
     return tmp;
 }
 Matrix Matrix::operator ()(unsigned j)const
 {
     Matrix tmp(row,1);
     for(int i=0;i<row;i++)
-        tmp.data[i][1]=data[i][j];
+        tmp.data[i][0]=data[i][j];
     return tmp;
 
 }
 Matrix::operator int () const
 {
-    return data[1][1];
+    return **data;
 }
+//2 3
+//1 2 3  // m1
+//4 5 6
+//2 3 4  // m2
+//5 6 7
+//0 0  // m3
+//0 2
+//1 0
+//0 1  // i j
+
